@@ -33,7 +33,13 @@ This is a <strong>simple prototype</strong> demonstrating skill tracking and low
       <th>Status</th>
       <th>Last Practiced</th>
       <th>Reference Video</th>
-      <th>Action</th>
+      <td>
+  <select onchange="updateStatus(this)">
+    <option value="Needs Practice">Needs Practice</option>
+    <option value="Need More Practice">Need More Practice</option>
+    <option value="Mastered">Mastered</option>
+  </select>
+</td>
     </tr>
   </thead>
   <tbody>
@@ -95,6 +101,36 @@ function updateRecs(){
     list.appendChild(li);
   }
 }
+  function updateStatus(selectElem) {
+  const row = selectElem.closest('tr');
+  const statusCell = row.querySelector('.pill');
+  const newValue = selectElem.value;
+
+  // Update status text
+  statusCell.textContent = newValue;
+
+  // Update pill color based on status
+  if(newValue === "Mastered") {
+    statusCell.className = "pill done";
+  } else if(newValue === "Need More Practice") {
+    statusCell.className = "pill todo"; // Can customize color
+    statusCell.style.backgroundColor = "#fff0f0"; // light red
+    statusCell.style.color = "#a80000";
+  } else { // Needs Practice
+    statusCell.className = "pill todo"; // original orange style
+    statusCell.style.backgroundColor = "#fff4e5";
+    statusCell.style.color = "#8a5a00";
+  }
+
+  // Update last practiced date to today
+  const lastPracticed = row.querySelector('td[data-days]');
+  lastPracticed.textContent = "Today";
+  lastPracticed.setAttribute("data-days", "0");
+
+  // Update recommendations
+  updateRecs();
+}
+
 updateRecs();
 </script>
 </body>
