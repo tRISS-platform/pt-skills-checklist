@@ -17,7 +17,24 @@
   .todo { background: #fff4e5; color: #8a5a00; }
   .btn { padding: 6px 10px; cursor: pointer; }
   .rec { margin-top: 16px; padding: 12px; background: #f9fafb; border: 1px dashed #ccc; }
-</style>
+<//* Mastered: green */
+.pill.done {
+    background-color: #e6f6ea; /* light green */
+    color: #1b7f3b;            /* dark green */
+}
+
+/* Needs Practice: orange */
+.pill.needs-practice {
+    background-color: #fff4e5; /* light orange */
+    color: #8a5a00;            /* dark orange */
+}
+
+/* Need More Practice: red */
+.pill.more-practice {
+    background-color: #fff0f0; /* light red */
+    color: #a80000;            /* dark red */
+}
+>
 </head>
 <body>
 <h1>PT Skills Checklist (Sample)</h1>
@@ -33,14 +50,7 @@ This is a <strong>simple prototype</strong> demonstrating skill tracking and low
       <th>Status</th>
       <th>Last Practiced</th>
       <th>Reference Video</th>
-  <th><td>
-  <select onchange="updateStatus(this)">
-    <option value="Needs Practice">Needs Practice</option>
-    <option value="Need More Practice">Need More Practice</option>
-    <option value="Mastered">Mastered</option>
-  </select>
-</td>
-</th>
+      <th>Action</th>
     </tr>
   </thead>
   <tbody>
@@ -48,22 +58,43 @@ This is a <strong>simple prototype</strong> demonstrating skill tracking and low
       <td>Goniometric Measurement (Knee)</td>
       <td><span class="pill todo">Needs Practice</span></td>
       <td data-days="14">14 days ago</td>
-       <td><a href="https://drive.google.com/file/d/1i2ncjv_vCIp_F3a7PX0l7P8cKPZeAbIW/view?usp=sharing" target="blank">View</a></td>
-      <td><button class="btn" onclick="markDone(this)">Mark Practiced</button></td>
+      <td><a href="https://drive.google.com/file/d/1i2ncjv_vCIp_F3a7PX0l7P8cKPZeAbIW/view?usp=sharing" target="blank">View</a></td>
+      <td>
+  <select class="status-select" onchange="updateStatus(this)">
+    <option value="Needs Practice">Needs Practice</option>
+    <option value="Need More Practice">Need More Practice</option>
+    <option value="Mastered">Mastered</option>
+  </select>
+</td>
+
     </tr>
     <tr>
       <td>Manual Muscle Testing (UE)</td>
       <td><span class="pill done">Mastered</span></td>
       <td data-days="3">3 days ago</td>
       <td><a href="#" onclick="alert('Faculty-approved video placeholder')">View</a></td>
-      <td><button class="btn" onclick="markDone(this)">Mark Practiced</button></td>
+      <td>
+  <select class="status-select" onchange="updateStatus(this)">
+    <option value="Needs Practice">Needs Practice</option>
+    <option value="Need More Practice">Need More Practice</option>
+    <option value="Mastered">Mastered</option>
+  </select>
+</td>
+
     </tr>
     <tr>
       <td>Bed Mobility Techniques</td>
       <td><span class="pill todo">Needs Practice</span></td>
       <td data-days="21">21 days ago</td>
       <td><a href="#" onclick="alert('Faculty-approved video placeholder')">View</a></td>
-      <td><button class="btn" onclick="markDone(this)">Mark Practiced</button></td>
+      <td>
+  <select class="status-select" onchange="updateStatus(this)">
+    <option value="Needs Practice">Needs Practice</option>
+    <option value="Need More Practice">Need More Practice</option>
+    <option value="Mastered">Mastered</option>
+  </select>
+</td>
+
     </tr>
   </tbody>
 </table>
@@ -74,64 +105,36 @@ This is a <strong>simple prototype</strong> demonstrating skill tracking and low
 </div>
 
 <script>
-function markDone(btn){
-  const row = btn.closest('tr');
-  row.querySelector('.pill').textContent = 'Mastered';
-  row.querySelector('.pill').className = 'pill done';
-  row.querySelector('td[data-days]').textContent = 'Today';
-  row.querySelector('td[data-days]').setAttribute('data-days','0');
-  updateRecs();
-}
+function updateStatus(selectElem) {
+  const row = selectElem.closest('tr');        // Get the table row
+  const statusCell = row.querySelector('.pill'); // Get the status pill
+  const newValue = selectElem.value;           // Get selected value
 
-function updateRecs(){
-  const rows = document.querySelectorAll('#skills tbody tr');
-  const list = document.querySelector('#recommendations ul');
-  list.innerHTML = '';
-  rows.forEach(r => {
-    const days = parseInt(r.querySelector('td[data-days]').getAttribute('data-days'));
-    const skill = r.children[0].textContent;
-    if(days >= 14){
-      const li = document.createElement('li');
-      li.textContent = `Prioritize review of "${skill}" (last practiced ${days} days ago).`;
-      list.appendChild(li);
-    }
-  });
-  if(list.children.length === 0){
-    const li = document.createElement('li');
-    li.textContent = 'You are on track. Maintain practice frequency.';
-    list.appendChild(li);
-  }
-}
-</script>
-  function updateStatus(selectElem) {
-  const row = selectElem.closest('tr');
-  const statusCell = row.querySelector('.pill');
-  const newValue = selectElem.value;
-
-  // Update status text
+  // Update the pill text
   statusCell.textContent = newValue;
 
-  // Update pill color based on status
-  if(newValue === "Mastered") {
-    statusCell.className = "pill done";
-  } else if(newValue === "Need More Practice") {
-    statusCell.className = "pill todo"; // Can customize color
-    statusCell.style.backgroundColor = "#fff0f0"; // light red
+  // Change pill color based on selection
+  if (newValue === "Mastered") {
+    statusCell.className = "pill done";       // Green
+  } else if (newValue === "Need More Practice") {
+    statusCell.className = "pill todo";      // Light red
+    statusCell.style.backgroundColor = "#fff0f0";
     statusCell.style.color = "#a80000";
   } else { // Needs Practice
-    statusCell.className = "pill todo"; // original orange style
+    statusCell.className = "pill todo";      // Orange
     statusCell.style.backgroundColor = "#fff4e5";
     statusCell.style.color = "#8a5a00";
   }
 
-  // Update last practiced date to today
-  const lastPracticed = row.querySelector('td[data-days]');
-  lastPracticed.textContent = "Today";
-  lastPracticed.setAttribute("data-days", "0");
+  // Update last practiced to today
+  const lastPracticedCell = row.querySelector('td[data-days]');
+  lastPracticedCell.textContent = "Today";
+  lastPracticedCell.setAttribute("data-days", "0");
 
-  // Update recommendations
+  // Update AI-style recommendations
   updateRecs();
 }
 
+</script>
 </body>
 </html>
