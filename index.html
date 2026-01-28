@@ -33,13 +33,14 @@ This is a <strong>simple prototype</strong> demonstrating skill tracking and low
       <th>Status</th>
       <th>Last Practiced</th>
       <th>Reference Video</th>
-      <td>
+  <th><td>
   <select onchange="updateStatus(this)">
     <option value="Needs Practice">Needs Practice</option>
     <option value="Need More Practice">Need More Practice</option>
     <option value="Mastered">Mastered</option>
   </select>
 </td>
+</th>
     </tr>
   </thead>
   <tbody>
@@ -101,6 +102,7 @@ function updateRecs(){
     list.appendChild(li);
   }
 }
+</script>
   function updateStatus(selectElem) {
   const row = selectElem.closest('tr');
   const statusCell = row.querySelector('.pill');
@@ -131,7 +133,5 @@ function updateRecs(){
   updateRecs();
 }
 
-updateRecs();
-</script>
 </body>
 </html>
